@@ -2,14 +2,21 @@ import Express from "express";
 import morgan from "morgan";
 import TourRouter from "./routes/TourRoutes.js";
 import UserRouter from "./routes/UserRoutes.js";
+import dotenv from "dotenv";
+
+dotenv.config({ path: "./config.env" });
 
 const App = Express();
 
 //Middleware
-App.use(morgan("dev"));
+if (process.env.NODE_ENV === "development") {
+  App.use(morgan("dev"));
+}
 App.use(Express.json());
+App.use(Express.static("./public"));
+
 App.use((req, res, next) => {
-  console.log("Hello from middleware");
+  // console.log("Hello from middleware");
   next();
 });
 App.use((req, res, next) => {
@@ -27,8 +34,5 @@ App.use((req, res, next) => {
 
 App.use("/api/v1/tours", TourRouter);
 App.use("/api/v1/users", UserRouter);
-//Start server
-const PORT = 3000;
-App.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
+
+export default App;

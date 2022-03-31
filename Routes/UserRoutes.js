@@ -1,31 +1,11 @@
 import Express from "express";
-
-const getAllUsers = (req, res) => {
-  res
-    .status(500)
-    .json({ status: "error", message: "This route is not finished" });
-};
-const getUser = (req, res) => {
-  res
-    .status(500)
-    .json({ status: "error", message: "This route is not finished" });
-};
-const createUser = (req, res) => {
-  res
-    .status(500)
-    .json({ status: "error", message: "This route is not finished" });
-};
-const updateUser = (req, res) => {
-  res
-    .status(500)
-    .json({ status: "error", message: "This route is not finished" });
-};
-const deleteUser = (req, res) => {
-  res
-    .status(500)
-    .json({ status: "error", message: "This route is not finished" });
-};
-
+import {
+  getAllUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "./../Controllers/UserController.js";
 const UserRouter = Express.Router();
 
 UserRouter.route("/").get(getAllUsers).post(createUser);
