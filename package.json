@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon.cmd Server.js",
+    "start": "nodemon.cmd Server.js",
     "start:prod": "NODE_ENV=production nodemon.cmd Server.js"
   },
   "author": "",
