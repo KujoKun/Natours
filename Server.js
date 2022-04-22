@@ -1,6 +1,6 @@
+import dotenv from "dotenv";
 import App from "./App.js";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
 // console.log(process.env.PORT);
 
 const DB =
@@ -14,6 +14,7 @@ mongoose
   .then((con) => {
     console.log("DB connection success");
   });
+
 const PORT = process.env.PORT || 3000;
 App.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
