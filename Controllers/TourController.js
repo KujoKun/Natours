@@ -6,27 +6,33 @@ import _ from "lodash";
 const getAllTours = async (req, res) => {
   try {
     //Building the query
-    const qObj = { ...req.query };
-    const excludedField = ["page", "sort", "limit", "field"];
-    excludedField.forEach((el) => delete qObj[el]);
-    // const qObj = _.omit({ ...req.query }, ["page", "sort", "limit", "field"]);
+    const qObj = _.omit({ ...req.query }, ["page", "sort", "limit", "fields"]);
+
     //Advanced filtering
     let qStr = JSON.stringify(qObj);
     qStr = qStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
     let query = Tour.find(JSON.parse(qStr));
-    console.log(qStr);
-    //{diffculty: easy, duration: {$gte: 5}}
-    console.log(req.query);
-    console.log(req.body);
     //Execute the query
 
     //Sorting
     if (req.query.sort) {
-      console.log("wow");
-      query = query.sort(req.query.sort);
+      const sortBy = req.query.sort.split(",").join(" ");
+      query = query.sort(sortBy);
+    } else {
+      query.sort("-createdAt");
     }
-    const tours = await query;
+    //Field limiting:
 
+    if (req.query.fields) {
+      const fields = req.query.fields.split(",").join(" ");
+      query = query.select(fields);
+    } else {
+      query = query.select("-__v");
+    }
+
+    //pagination
+
+    const tours = await query;
     //Send resposne
     res.status(200).json({
       status: "success",
