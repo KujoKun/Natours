@@ -2,7 +2,12 @@
 import Tour from "./../Models/tourModel.js";
 import _ from "lodash";
 // const tours = JSON.parse(fs.readFileSync("./dev-data/data/tours-simple.json"));
-
+const aliasTopTours = (req, res, next) => {
+  req.query.limit = "5";
+  req.query.sort = "-ratingAverage,price";
+  req.query.fields = "name,price,ratingAverage,summary,difficulty";
+  next();
+};
 const getAllTours = async (req, res) => {
   try {
     //Building the query
@@ -37,6 +42,12 @@ const getAllTours = async (req, res) => {
 
     const skipVal = (page - 1) * limitVal;
     query = query.skip(skipVal).limit(limitVal);
+    if (req.query.page) {
+      const numTours = await Tour.countDocuments();
+      if (skipVal >= numTours) {
+        throw new Error("This page does not exist");
+      }
+    }
     const tours = await query;
     //Send resposne
     res.status(200).json({
@@ -46,7 +57,7 @@ const getAllTours = async (req, res) => {
       data: { tours },
     });
   } catch (err) {
-    res.status(400).json({
+    res.status(404).json({
       status: "fail",
       message: err,
     });
@@ -116,4 +127,11 @@ const deleteTour = async (req, res) => {
   }
 };
 
-export { getAllTours, getTour, createTour, updateTour, deleteTour };
+export {
+  getAllTours,
+  getTour,
+  createTour,
+  updateTour,
+  deleteTour,
+  aliasTopTours,
+};
